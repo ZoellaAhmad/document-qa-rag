@@ -21,7 +21,7 @@ Like any RAG system, this project:
 - **Overlapping chunks** — each chunk is 500 characters long with a 50-character overlap, so sentences aren't cut awkwardly between chunks; the overlap also means related content appears in multiple chunks, helping the model place them closer together in vector space
 - **Hallucination resistance** — the model is explicitly instructed to say when the provided context doesn't contain the answer, rather than guessing
 - **Standalone testing** — `rag.py` includes a commented-out block for testing the pipeline directly in the terminal, without needing the Streamlit UI
-- **Reproducibility** — all dependencies are pinned in `requirements.txt` for easy setup on any machine
+- **Reproducibility** — all dependencies are listed in `requirements.txt` for easy setup on any machine
 
 ## Example queries
 
