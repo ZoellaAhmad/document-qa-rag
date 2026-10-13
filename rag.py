@@ -27,13 +27,25 @@ def embed_chunks(chunks):
 
 
 client = chromadb.Client()
-collection = client.create_collection("my_docs")
-def store_chunks(chunks, embeddings):
-    collection.add(
-        documents=chunks,
-        embeddings=embeddings,
-        ids=[str(i) for i in range(len(chunks))]
+COLLECTION_NAME = "my_docs"
+collection = client.get_or_create_collection(
+    COLLECTION_NAME, metadata={"hnsw:space": "cosine"}
+)
+
+def reset_collection():
+    """Delete the old document's chunks so a new PDF starts clean."""
+    global collection
+    client.delete_collection(COLLECTION_NAME)
+    collection = client.create_collection(
+        COLLECTION_NAME, metadata={"hnsw:space": "cosine"}
     )
+
+def build_index(path):
+    reset_collection()
+    text = load_pdf(path)
+    chunks = chunk_text(text)
+    embeddings = embed_chunks(chunks)
+    store_chunks(chunks, embeddings)
 
 
 def retrieve(question, k=3):
@@ -66,12 +78,6 @@ def answer_question(question):
     return response['message']['content']
 
 
-
-def build_index(path):
-    text = load_pdf(path)
-    chunks = chunk_text(text)
-    embeddings = embed_chunks(chunks)
-    store_chunks(chunks, embeddings)
 
 # if __name__ == "__main__":
 #     build_index("C:/Users/Zoella/Desktop/project/What-is-the-Cosmere.pdf")
