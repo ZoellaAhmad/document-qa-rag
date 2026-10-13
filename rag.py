@@ -40,6 +40,13 @@ def reset_collection():
         COLLECTION_NAME, metadata={"hnsw:space": "cosine"}
     )
 
+def store_chunks(chunks, embeddings):
+    collection.add(
+        documents=chunks,
+        embeddings=embeddings,
+        ids=[str(i) for i in range(len(chunks))]
+    )
+
 def build_index(path):
     reset_collection()
     text = load_pdf(path)
